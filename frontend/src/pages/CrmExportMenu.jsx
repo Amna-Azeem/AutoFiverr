@@ -1,6 +1,6 @@
 
 import { useId, useState } from "react";
-import { CRMS, downloadCrmCsv } from "./CrmExports.js";
+import { CRMS, downloadCrmCsv } from "./crmExports.js";
 
 export default function CrmExportMenu({
   leads = [],
