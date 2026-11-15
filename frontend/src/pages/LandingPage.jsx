@@ -181,7 +181,7 @@ export default function LandingPage() {
               <div className="absolute h-[320px] w-[320px] rounded-full bg-blue-100 blur-3xl opacity-60" />
 
               <img
-                src="public/publicimageshero-workflow.png"
+                src="/publicimageshero-workflow.png"
                 alt="AutoFiverr Workflow"
                 className="relative z-10 w-full max-w-[420px] object-contain"
               />
