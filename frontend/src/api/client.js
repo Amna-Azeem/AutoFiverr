@@ -1,4 +1,4 @@
-const BASE = "/api";
+const BASE = "https://autofiverr-backend.onrender.com/api";
 function authHeaders() {
   const token = localStorage.getItem("autofiverrToken");
 
