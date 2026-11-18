@@ -1,20 +1,41 @@
-import nodemailer from "nodemailer";
+async function sendEmail({ to, subject, html }) {
+  if (!process.env.BREVO_API_KEY || !process.env.EMAIL_FROM) {
+    throw new Error("Missing BREVO_API_KEY or EMAIL_FROM environment variable");
+  }
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_APP_PASSWORD,
-  },
-});
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "accept": "application/json",
+      "api-key": process.env.BREVO_API_KEY,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: {
+        name: "AutoFiverr",
+        email: process.env.EMAIL_FROM,
+      },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Brevo email failed (${response.status}): ${error}`);
+  }
+
+  return await response.json();
+}
 
 export async function sendPasswordResetEmail({
   email,
   name,
   resetUrl,
 }) {
-  await transporter.sendMail({
-    from: `"AutoFiverr" <${process.env.EMAIL_USER}>`,
+  await sendEmail({
+   
     to: email,
     subject: "Reset your AutoFiverr password",
     html: `
@@ -148,8 +169,7 @@ export async function sendVerificationEmail({
   name,
   verifyUrl,
 }) {
-  await transporter.sendMail({
-    from: `"AutoFiverr" <${process.env.EMAIL_USER}>`,
+ await sendEmail({
     to: email,
     subject: "Verify your AutoFiverr email",
     html: `
