@@ -91,7 +91,10 @@ router.post("/signup", async (req, res) => {
     const existing = await User.findOne({
       email: normalizedEmail,
     });
-
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+if (!emailPattern.test(normalizedEmail)) {
+  return res.status(400).json({ error: "Please enter a valid email address" });
+}
    
 if (existing) {
   if (!existing.emailVerified) {
@@ -109,10 +112,11 @@ if (existing) {
         emailError
       );
 
-      return res.status(500).json({
-        error:
-          "Your account exists but the verification email could not be sent. Please try again later.",
-      });
+      return res.status(200).json({
+  success: true,
+  message:
+    "This account exists but isn't verified, and we couldn't send the email right now. Try Resend verification on the login page.",
+});
     }
   }
 
